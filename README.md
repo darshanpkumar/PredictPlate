@@ -17,16 +17,6 @@ The application is built using **Python, Scikit-Learn, Streamlit**, and deployed
 
 ---
 
-## 📸 Preview
-
-> Add screenshots of your application here.
-
-| Home Page | Prediction Results |
-|-----------|--------------------|
-| ![Home](assets/home.png) | ![Prediction](assets/prediction.png) |
-
----
-
 ## ✨ Features
 
 - 📦 Predict delivery time using Machine Learning
@@ -89,9 +79,6 @@ PredictPlate/
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
-├── assets/
-│   ├── home.png
-│   └── prediction.png
 └── Food_Delivery_Delay_Prediction_ML.ipynb
 ```
 
