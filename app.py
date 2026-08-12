@@ -13,26 +13,45 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Custom CSS
+# Custom CSS (Fixes Invisible Labels & Contrast)
 # -----------------------------
 st.markdown(
     """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
 
-/* ── Global ── */
+/* ── Global App Background ── */
 html, body, [class*="css"] {
     font-family: 'DM Sans', sans-serif;
-    background-color: #FAF7F2;
-    color: #1A1A1A;
+    background-color: #FAF7F2 !important;
+    color: #1A1A1A !important;
     font-size: 16px;
 }
 
-.stApp { background-color: #FAF7F2; }
+.stApp { 
+    background-color: #FAF7F2 !important; 
+}
 
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu, footer, header { 
+    visibility: hidden; 
+}
 
-/* ── Hero ── */
+/* ── CRITICAL FIX: FORCE ALL WIDGET LABELS TO BE DARK & VISIBLE ── */
+div[data-testid="stWidgetLabel"],
+div[data-testid="stWidgetLabel"] *,
+label,
+label p,
+label span,
+[data-testid="stMarkdownContainer"] p {
+    color: #1A1A1A !important;
+    -webkit-text-fill-color: #1A1A1A !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ── Hero Section ── */
 .hero {
     background: #1B4332;
     border-radius: 20px;
@@ -73,18 +92,21 @@ html, body, [class*="css"] {
     font-family: 'Sora', sans-serif;
     font-size: 2.8rem;
     font-weight: 800;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
     margin: 0 0 0.6rem 0;
     line-height: 1.1;
 }
 
 .hero h1 em {
     font-style: normal;
-    color: #95D5B2;
+    color: #95D5B2 !important;
+    -webkit-text-fill-color: #95D5B2 !important;
 }
 
 .hero p {
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.7) !important;
+    -webkit-text-fill-color: rgba(255,255,255,0.7) !important;
     font-size: 1.05rem;
     font-weight: 300;
     margin: 0;
@@ -94,49 +116,19 @@ html, body, [class*="css"] {
 /* ── Section Headers ── */
 .sect-head {
     font-family: 'Sora', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
+    font-size: 0.85rem;
+    font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #1B4332;
-    border-left: 3px solid #1B4332;
+    color: #1B4332 !important;
+    border-left: 3.5px solid #1B4332;
     padding-left: 0.6rem;
-    margin: 1.4rem 0 0.8rem 0;
+    margin: 1.6rem 0 0.9rem 0;
 }
 
-/* ── INPUT VISIBILITY & CONTRAST FIXES ── */
+/* ── INPUT FIELDS STYLING ── */
 
-/* 1. Labels */
-div[data-testid="stWidgetLabel"], 
-div[data-testid="stWidgetLabel"] * {
-    color: #2D3748 !important;
-    -webkit-text-fill-color: #2D3748 !important;
-    font-weight: 600 !important;
-    font-size: 0.92rem !important;
-}
-
-/* 2. Selectbox Field & Dropdown Text */
-div[data-testid="stSelectbox"] div[data-baseweb="select"] {
-    background-color: #F5F1EB !important;
-    border: 1.5px solid #DDD6CC !important;
-    border-radius: 10px !important;
-}
-
-div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
-    color: #1A1A1A !important;
-    -webkit-text-fill-color: #1A1A1A !important;
-    font-weight: 600 !important;
-}
-
-/* Dropdown Menu Popup Items */
-ul[data-baseweb="menu"] li,
-ul[data-baseweb="menu"] li * {
-    color: #1A1A1A !important;
-    -webkit-text-fill-color: #1A1A1A !important;
-    background-color: #FFFFFF !important;
-}
-
-/* 3. Number Input Text & Controls */
+/* Number Inputs */
 div[data-testid="stNumberInput"] input {
     background-color: #F5F1EB !important;
     border: 1.5px solid #DDD6CC !important;
@@ -158,6 +150,27 @@ div[data-testid="stNumberInput"] button * {
     -webkit-text-fill-color: #FFFFFF !important;
 }
 
+/* Selectbox Dropdowns */
+div[data-testid="stSelectbox"] > div > div {
+    background-color: #F5F1EB !important;
+    border: 1.5px solid #DDD6CC !important;
+    border-radius: 10px !important;
+}
+
+div[data-testid="stSelectbox"] * {
+    color: #1A1A1A !important;
+    -webkit-text-fill-color: #1A1A1A !important;
+    font-weight: 600 !important;
+}
+
+/* Dropdown Menu Popup Overlay */
+div[data-baseweb="popover"] *,
+ul[data-baseweb="menu"] * {
+    color: #1A1A1A !important;
+    -webkit-text-fill-color: #1A1A1A !important;
+    background-color: #FFFFFF !important;
+}
+
 /* ── Predict Button ── */
 .stButton > button {
     width: 100%;
@@ -173,7 +186,7 @@ div[data-testid="stNumberInput"] button * {
     padding: 0.85rem 1.5rem !important;
     transition: all 0.18s ease !important;
     box-shadow: 0 4px 16px rgba(232,93,74,0.3) !important;
-    margin-top: 1rem;
+    margin-top: 1.2rem;
 }
 
 .stButton > button:hover {
@@ -203,7 +216,7 @@ div[data-testid="stNumberInput"] button * {
     display: inline-block;
 }
 
-/* ── Result Cards (Mobile Responsive Grid) ── */
+/* ── Result Cards Grid (Mobile Responsive) ── */
 .result-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -236,7 +249,7 @@ div[data-testid="stNumberInput"] button * {
     font-weight: 600;
     letter-spacing: 0.09em;
     text-transform: uppercase;
-    color: #999;
+    color: #888;
     margin-bottom: 0.6rem;
 }
 
@@ -248,9 +261,9 @@ div[data-testid="stNumberInput"] button * {
     color: #1A1A1A;
 }
 
-.card-value.green-val { color: #1B4332; }
-.card-value.red-val   { color: #E85D4A; }
-.card-value.slate-val { color: #4A6FA5; }
+.card-value.green-val { color: #1B4332 !important; -webkit-text-fill-color: #1B4332 !important; }
+.card-value.red-val   { color: #E85D4A !important; -webkit-text-fill-color: #E85D4A !important; }
+.card-value.slate-val { color: #4A6FA5 !important; -webkit-text-fill-color: #4A6FA5 !important; }
 
 .card-unit {
     font-size: 1rem;
@@ -287,13 +300,13 @@ div[data-testid="stNumberInput"] button * {
 .status-banner.ontime {
     background: #D8F3DC;
     border: 1.5px solid #95D5B2;
-    color: #1B4332;
+    color: #1B4332 !important;
 }
 
 .status-banner.late {
     background: #FDE8E5;
     border: 1.5px solid #F4A79D;
-    color: #B83A2A;
+    color: #B83A2A !important;
 }
 
 .pulse-dot {
@@ -324,20 +337,11 @@ div[data-testid="stNumberInput"] button * {
 
 .idle-wrap p {
     font-size: 1.05rem;
-    color: #888;
+    color: #666 !important;
     margin: 0;
 }
 
-.idle-wrap strong { color: #E85D4A; }
-
-/* ── Expander ── */
-details, .streamlit-expanderHeader {
-    background: #FFFFFF !important;
-    border: 1.5px solid #E8E0D5 !important;
-    border-radius: 12px !important;
-    font-size: 0.95rem !important;
-    color: #555 !important;
-}
+.idle-wrap strong { color: #E85D4A !important; }
 
 /* ── About Card ── */
 .about-card {
@@ -357,7 +361,7 @@ details, .streamlit-expanderHeader {
 }
 
 .about-card p {
-    color: #555;
+    color: #555 !important;
     font-size: 0.97rem;
     line-height: 1.75;
     margin-bottom: 1.1rem;
@@ -372,7 +376,7 @@ details, .streamlit-expanderHeader {
     border-radius: 100px;
     padding: 0.3rem 0.85rem;
     font-size: 0.85rem;
-    color: #444;
+    color: #444 !important;
     margin: 0.2rem 0.2rem 0.2rem 0;
     font-weight: 500;
 }
@@ -380,14 +384,14 @@ details, .streamlit-expanderHeader {
 /* ── Footer ── */
 .footer {
     text-align: center;
-    color: #BBB;
+    color: #AAA !important;
     font-size: 0.85rem;
     margin-top: 2.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid #E8E0D5;
 }
 
-.footer strong { color: #1B4332; }
+.footer strong { color: #1B4332 !important; }
 
 /* ── Divider ── */
 hr { border-color: #E8E0D5 !important; }
@@ -397,13 +401,13 @@ hr { border-color: #E8E0D5 !important; }
 )
 
 # -----------------------------
-# Load Models
+# Load ML Models
 # -----------------------------
 reg_model = joblib.load("model.pkl")
 clf_model = joblib.load("classifier.pkl")
 
 # -----------------------------
-# Hero Section
+# Hero Banner
 # -----------------------------
 st.markdown(
     """
@@ -417,7 +421,7 @@ st.markdown(
 )
 
 # -----------------------------
-# Form Inputs in Main Body
+# Form Inputs (Main Area)
 # -----------------------------
 st.markdown('<div class="sect-head">📦 Order Details</div>', unsafe_allow_html=True)
 col_ord1, col_ord2 = st.columns(2)
@@ -439,9 +443,7 @@ with col_cour1:
 with col_cour2:
     vehicle = st.selectbox("Vehicle Type", ["Bike", "Car", "Scooter"])
 
-st.markdown(
-    '<div class="sect-head">🌦 Conditions</div>', unsafe_allow_html=True
-)
+st.markdown('<div class="sect-head">🌦 Conditions</div>', unsafe_allow_html=True)
 col_cond1, col_cond2, col_cond3 = st.columns(3)
 with col_cond1:
     weather = st.selectbox(
@@ -459,7 +461,7 @@ predict = st.button("🚀 Predict Now")
 st.markdown("<br>", unsafe_allow_html=True)
 
 # -----------------------------
-# Prediction Processing & Results
+# Prediction Logic & Output
 # -----------------------------
 if predict:
     input_data = pd.DataFrame(
