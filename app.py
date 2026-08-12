@@ -91,16 +91,7 @@ html, body, [class*="css"] {
     max-width: 480px;
 }
 
-/* ── Main Inputs Container ── */
-.form-card {
-    background: #FFFFFF;
-    border: 1.5px solid #E8E0D5;
-    border-radius: 20px;
-    padding: 1.8rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.03);
-}
-
+/* ── Section Headers ── */
 .sect-head {
     font-family: 'Sora', sans-serif;
     font-size: 0.8rem;
@@ -110,40 +101,61 @@ html, body, [class*="css"] {
     color: #1B4332;
     border-left: 3px solid #1B4332;
     padding-left: 0.6rem;
-    margin: 1.2rem 0 0.8rem 0;
+    margin: 1.4rem 0 0.8rem 0;
 }
 
-/* ── Inputs Styling ── */
-label, .stSelectbox label, .stNumberInput label {
-    color: #444 !important;
-    font-size: 0.9rem !important;
-    font-weight: 500 !important;
-    font-family: 'DM Sans', sans-serif !important;
-    margin-bottom: 0.2rem !important;
+/* ── INPUT VISIBILITY & CONTRAST FIXES ── */
+
+/* 1. Labels */
+div[data-testid="stWidgetLabel"], 
+div[data-testid="stWidgetLabel"] * {
+    color: #2D3748 !important;
+    -webkit-text-fill-color: #2D3748 !important;
+    font-weight: 600 !important;
+    font-size: 0.92rem !important;
 }
 
-.stNumberInput > div > div > input {
+/* 2. Selectbox Field & Dropdown Text */
+div[data-testid="stSelectbox"] div[data-baseweb="select"] {
+    background-color: #F5F1EB !important;
+    border: 1.5px solid #DDD6CC !important;
+    border-radius: 10px !important;
+}
+
+div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
+    color: #1A1A1A !important;
+    -webkit-text-fill-color: #1A1A1A !important;
+    font-weight: 600 !important;
+}
+
+/* Dropdown Menu Popup Items */
+ul[data-baseweb="menu"] li,
+ul[data-baseweb="menu"] li * {
+    color: #1A1A1A !important;
+    -webkit-text-fill-color: #1A1A1A !important;
+    background-color: #FFFFFF !important;
+}
+
+/* 3. Number Input Text & Controls */
+div[data-testid="stNumberInput"] input {
     background-color: #F5F1EB !important;
     border: 1.5px solid #DDD6CC !important;
     border-radius: 10px !important;
     color: #1A1A1A !important;
+    -webkit-text-fill-color: #1A1A1A !important;
+    font-weight: 600 !important;
     font-size: 1rem !important;
-    font-family: 'DM Sans', sans-serif !important;
-    padding: 0.55rem 0.9rem !important;
 }
 
-.stNumberInput > div > div > input:focus {
-    border-color: #1B4332 !important;
-    box-shadow: 0 0 0 3px rgba(27,67,50,0.1) !important;
-    background-color: #fff !important;
+div[data-testid="stNumberInput"] button {
+    background-color: #1B4332 !important;
+    border: none !important;
+    border-radius: 8px !important;
 }
 
-.stSelectbox > div > div {
-    background-color: #F5F1EB !important;
-    border: 1.5px solid #DDD6CC !important;
-    border-radius: 10px !important;
-    color: #1A1A1A !important;
-    font-size: 1rem !important;
+div[data-testid="stNumberInput"] button * {
+    color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
 }
 
 /* ── Predict Button ── */
@@ -151,6 +163,7 @@ label, .stSelectbox label, .stNumberInput label {
     width: 100%;
     background: #E85D4A !important;
     color: #FFFFFF !important;
+    -webkit-text-fill-color: #FFFFFF !important;
     font-family: 'Sora', sans-serif !important;
     font-weight: 700 !important;
     font-size: 1rem !important;
@@ -190,7 +203,7 @@ label, .stSelectbox label, .stNumberInput label {
     display: inline-block;
 }
 
-/* ── Result Cards (Mobile Responsive) ── */
+/* ── Result Cards (Mobile Responsive Grid) ── */
 .result-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -390,7 +403,7 @@ reg_model = joblib.load("model.pkl")
 clf_model = joblib.load("classifier.pkl")
 
 # -----------------------------
-# Hero
+# Hero Section
 # -----------------------------
 st.markdown(
     """
@@ -404,7 +417,7 @@ st.markdown(
 )
 
 # -----------------------------
-# Main Order Input Section
+# Form Inputs in Main Body
 # -----------------------------
 st.markdown('<div class="sect-head">📦 Order Details</div>', unsafe_allow_html=True)
 col_ord1, col_ord2 = st.columns(2)
@@ -446,7 +459,7 @@ predict = st.button("🚀 Predict Now")
 st.markdown("<br>", unsafe_allow_html=True)
 
 # -----------------------------
-# Prediction & Results
+# Prediction Processing & Results
 # -----------------------------
 if predict:
     input_data = pd.DataFrame(
@@ -533,7 +546,7 @@ else:
     )
 
 # -----------------------------
-# About
+# About Section
 # -----------------------------
 st.markdown(
     """
