@@ -1,6 +1,6 @@
-import streamlit as st
-import pandas as pd
 import joblib
+import pandas as pd
+import streamlit as st
 
 # -----------------------------
 # Page Configuration
@@ -8,12 +8,15 @@ import joblib
 st.set_page_config(
     page_title="PredictPlate — Delivery Prediction",
     page_icon="🛵",
+    layout="centered",
+    initial_sidebar_state="collapsed",
 )
 
 # -----------------------------
 # Custom CSS
 # -----------------------------
-st.markdown("""
+st.markdown(
+    """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
 
@@ -88,44 +91,29 @@ html, body, [class*="css"] {
     max-width: 480px;
 }
 
-/* ── Sidebar ── */
-section[data-testid="stSidebar"] {
-    background-color: #FFFFFF !important;
-    border-right: 1px solid #E8E0D5 !important;
+/* ── Main Inputs Container ── */
+.form-card {
+    background: #FFFFFF;
+    border: 1.5px solid #E8E0D5;
+    border-radius: 20px;
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.03);
 }
 
-section[data-testid="stSidebar"] > div {
-    padding-top: 1.5rem;
-}
-
-.sidebar-title {
-    font-family: 'Sora', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1A1A1A;
-    padding: 0 0 0.3rem 0;
-}
-
-.sidebar-sub {
-    font-size: 0.88rem;
-    color: #888;
-    margin-bottom: 1.5rem;
-}
-
-/* ── Section Headers in Sidebar ── */
 .sect-head {
     font-family: 'Sora', sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #1B4332;
     border-left: 3px solid #1B4332;
     padding-left: 0.6rem;
-    margin: 1.6rem 0 0.9rem 0;
+    margin: 1.2rem 0 0.8rem 0;
 }
 
-/* ── Inputs ── */
+/* ── Inputs Styling ── */
 label, .stSelectbox label, .stNumberInput label {
     color: #444 !important;
     font-size: 0.9rem !important;
@@ -169,10 +157,10 @@ label, .stSelectbox label, .stNumberInput label {
     letter-spacing: 0.02em;
     border: none !important;
     border-radius: 12px !important;
-    padding: 0.75rem 1.5rem !important;
+    padding: 0.85rem 1.5rem !important;
     transition: all 0.18s ease !important;
     box-shadow: 0 4px 16px rgba(232,93,74,0.3) !important;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
 .stButton > button:hover {
@@ -202,12 +190,18 @@ label, .stSelectbox label, .stNumberInput label {
     display: inline-block;
 }
 
-/* ── Result Cards ── */
+/* ── Result Cards (Mobile Responsive) ── */
 .result-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 1.25rem;
+}
+
+@media (max-width: 768px) {
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .result-card {
@@ -251,7 +245,7 @@ label, .stSelectbox label, .stNumberInput label {
     color: #AAA;
 }
 
-/* ── Confidence bar inside card ── */
+/* ── Confidence Bar ── */
 .conf-track {
     background: #F0EDE8;
     border-radius: 999px;
@@ -303,7 +297,7 @@ label, .stSelectbox label, .stNumberInput label {
     50%       { transform: scale(1.45); opacity: 0.55; }
 }
 
-/* ── Idle placeholder ── */
+/* ── Idle Placeholder ── */
 .idle-wrap {
     background: #FFFFFF;
     border: 1.5px dashed #D6CECC;
@@ -385,7 +379,9 @@ details, .streamlit-expanderHeader {
 /* ── Divider ── */
 hr { border-color: #E8E0D5 !important; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # -----------------------------
 # Load Models
@@ -396,77 +392,104 @@ clf_model = joblib.load("classifier.pkl")
 # -----------------------------
 # Hero
 # -----------------------------
-st.markdown("""
+st.markdown(
+    """
 <div class="hero">
     <div class="hero-eyebrow">🛵 ML-Powered Logistics</div>
     <h1>Predict<em>Plate</em></h1>
     <p>Estimate delivery time and predict on-time status — before the order leaves the kitchen.</p>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # -----------------------------
-# Sidebar
+# Main Order Input Section
 # -----------------------------
-st.sidebar.markdown("""
-<div class="sidebar-title">Order Details</div>
-<div class="sidebar-sub">Fill in the fields below, then hit Predict.</div>
-""", unsafe_allow_html=True)
-
-st.sidebar.markdown('<div class="sect-head">📦 Order</div>', unsafe_allow_html=True)
-distance = st.sidebar.number_input("Distance (km)", min_value=0.5, max_value=30.0, value=5.0, step=0.5)
-prep_time = st.sidebar.number_input("Preparation Time (min)", min_value=0, max_value=60, value=15)
-
-st.sidebar.markdown('<div class="sect-head">🧑 Courier</div>', unsafe_allow_html=True)
-experience = st.sidebar.number_input("Experience (years)", min_value=0.0, max_value=20.0, value=2.0, step=0.5)
-vehicle = st.sidebar.selectbox("Vehicle Type", ["Bike", "Car", "Scooter"])
-
-st.sidebar.markdown('<div class="sect-head">🌦 Conditions</div>', unsafe_allow_html=True)
-weather = st.sidebar.selectbox("Weather", ["Clear", "Foggy", "Rainy", "Snowy", "Windy"])
-traffic = st.sidebar.selectbox("Traffic Level", ["High", "Medium", "Low"])
-time_day = st.sidebar.selectbox("Time of Day", ["Afternoon", "Morning", "Evening", "Night"])
-
-st.sidebar.markdown("<br>", unsafe_allow_html=True)
-predict = st.sidebar.button("🚀 Predict Now")
-
-# -----------------------------
-# Prediction
-# -----------------------------
-if predict:
-    input_data = pd.DataFrame({
-        "Distance_km": [distance],
-        "Preparation_Time_min": [prep_time],
-        "Courier_Experience_yrs": [experience],
-        "Weather_Foggy": [1 if weather == "Foggy" else 0],
-        "Weather_Rainy": [1 if weather == "Rainy" else 0],
-        "Weather_Snowy": [1 if weather == "Snowy" else 0],
-        "Weather_Windy": [1 if weather == "Windy" else 0],
-        "Traffic_Level_Low": [1 if traffic == "Low" else 0],
-        "Traffic_Level_Medium": [1 if traffic == "Medium" else 0],
-        "Time_of_Day_Evening": [1 if time_day == "Evening" else 0],
-        "Time_of_Day_Morning": [1 if time_day == "Morning" else 0],
-        "Time_of_Day_Night": [1 if time_day == "Night" else 0],
-        "Vehicle_Type_Car": [1 if vehicle == "Car" else 0],
-        "Vehicle_Type_Scooter": [1 if vehicle == "Scooter" else 0],
-    })
-
-    delivery_time = reg_model.predict(input_data)[0]
-    prediction    = clf_model.predict(input_data)[0]
-    confidence    = clf_model.predict_proba(input_data).max() * 100
-
-    is_late      = prediction == 1
-    status_text  = "Late" if is_late else "On-Time"
-    status_class = "late" if is_late else "ontime"
-    val_class    = "red-val" if is_late else "green-val"
-    status_icon  = "⚠️" if is_late else "✅"
-    status_msg   = (
-        "Conditions suggest this order may arrive late. Consider proactive communication."
-        if is_late else
-        "All conditions look good. This order should arrive on time."
+st.markdown('<div class="sect-head">📦 Order Details</div>', unsafe_allow_html=True)
+col_ord1, col_ord2 = st.columns(2)
+with col_ord1:
+    distance = st.number_input(
+        "Distance (km)", min_value=0.5, max_value=30.0, value=5.0, step=0.5
+    )
+with col_ord2:
+    prep_time = st.number_input(
+        "Preparation Time (min)", min_value=0, max_value=60, value=15
     )
 
-    st.markdown('<div class="results-header">Prediction Results</div>', unsafe_allow_html=True)
+st.markdown('<div class="sect-head">🧑 Courier</div>', unsafe_allow_html=True)
+col_cour1, col_cour2 = st.columns(2)
+with col_cour1:
+    experience = st.number_input(
+        "Experience (years)", min_value=0.0, max_value=20.0, value=2.0, step=0.5
+    )
+with col_cour2:
+    vehicle = st.selectbox("Vehicle Type", ["Bike", "Car", "Scooter"])
 
-    st.markdown(f"""
+st.markdown(
+    '<div class="sect-head">🌦 Conditions</div>', unsafe_allow_html=True
+)
+col_cond1, col_cond2, col_cond3 = st.columns(3)
+with col_cond1:
+    weather = st.selectbox(
+        "Weather", ["Clear", "Foggy", "Rainy", "Snowy", "Windy"]
+    )
+with col_cond2:
+    traffic = st.selectbox("Traffic Level", ["High", "Medium", "Low"])
+with col_cond3:
+    time_day = st.selectbox(
+        "Time of Day", ["Afternoon", "Morning", "Evening", "Night"]
+    )
+
+predict = st.button("🚀 Predict Now")
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# -----------------------------
+# Prediction & Results
+# -----------------------------
+if predict:
+    input_data = pd.DataFrame(
+        {
+            "Distance_km": [distance],
+            "Preparation_Time_min": [prep_time],
+            "Courier_Experience_yrs": [experience],
+            "Weather_Foggy": [1 if weather == "Foggy" else 0],
+            "Weather_Rainy": [1 if weather == "Rainy" else 0],
+            "Weather_Snowy": [1 if weather == "Snowy" else 0],
+            "Weather_Windy": [1 if weather == "Windy" else 0],
+            "Traffic_Level_Low": [1 if traffic == "Low" else 0],
+            "Traffic_Level_Medium": [1 if traffic == "Medium" else 0],
+            "Time_of_Day_Evening": [1 if time_day == "Evening" else 0],
+            "Time_of_Day_Morning": [1 if time_day == "Morning" else 0],
+            "Time_of_Day_Night": [1 if time_day == "Night" else 0],
+            "Vehicle_Type_Car": [1 if vehicle == "Car" else 0],
+            "Vehicle_Type_Scooter": [1 if vehicle == "Scooter" else 0],
+        }
+    )
+
+    delivery_time = reg_model.predict(input_data)[0]
+    prediction = clf_model.predict(input_data)[0]
+    confidence = clf_model.predict_proba(input_data).max() * 100
+
+    is_late = prediction == 1
+    status_text = "Late" if is_late else "On-Time"
+    status_class = "late" if is_late else "ontime"
+    val_class = "red-val" if is_late else "green-val"
+    status_icon = "⚠️" if is_late else "✅"
+    status_msg = (
+        "Conditions suggest this order may arrive late. Consider proactive communication."
+        if is_late
+        else "All conditions look good. This order should arrive on time."
+    )
+
+    st.markdown(
+        '<div class="results-header">Prediction Results</div>',
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        f"""
     <div class="result-grid">
         <div class="result-card">
             <div class="card-icon">⏱️</div>
@@ -490,24 +513,30 @@ if predict:
         <div class="pulse-dot {status_class}"></div>
         {status_icon} &nbsp;{status_msg}
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     st.markdown("<br>", unsafe_allow_html=True)
     with st.expander("🔍 View Encoded Model Input"):
         st.dataframe(input_data, use_container_width=True)
 
 else:
-    st.markdown("""
+    st.markdown(
+        """
     <div class="idle-wrap">
         <div class="idle-emoji">🛵</div>
-        <p>Enter the order details in the sidebar and click <strong>Predict Now</strong> to see results.</p>
+        <p>Fill in the order details above and click <strong>Predict Now</strong> to see results.</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
 # -----------------------------
 # About
 # -----------------------------
-st.markdown("""
+st.markdown(
+    """
 <div class="about-card">
     <div class="about-title">How It Works</div>
     <p>
@@ -524,13 +553,18 @@ st.markdown("""
         <span class="pill">⚡ Streamlit</span>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # -----------------------------
 # Footer
 # -----------------------------
-st.markdown("""
+st.markdown(
+    """
 <div class="footer">
     Built by <strong>Darshan P Kumar</strong> &nbsp;·&nbsp; PredictPlate v2.0
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
